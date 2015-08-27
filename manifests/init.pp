@@ -172,10 +172,9 @@ class iis (
   {
     installed:
     {
-      core::windows::feature { 'Web-Server':
-        ensure      => present,
-        subfeatures => 'Web-WebServer,Web-Common-Http,Web-CGI,Web-ISAPI-Ext,Web-ISAPI-Filter',
-        restart     => $restart,
+      core::windows::feature { 'Web-Server,Web-WebServer,Web-Common-Http,Web-App-Dev,Web-CGI,Web-ISAPI-Ext,Web-ISAPI-Filter':
+        ensure  => present,
+        restart => $restart,
       }
     }
     default:
