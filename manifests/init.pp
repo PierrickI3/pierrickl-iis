@@ -28,7 +28,7 @@ define core::windows::feature(
           $subfeatures_option = $subfeatures ? { true => '-IncludeAllSubFeature',   default => '' }
           if ($management_tools)
           {
-            warn('Automatic inclusion of Manegement tools is not supported on Windows 7 and 2008 R2')
+            warn('Automatic inclusion of Management tools is not supported on Windows 7 and 2008 R2')
           }
 
           if ($restart)
@@ -152,7 +152,8 @@ define core::windows::feature(
 # === Examples
 #
 #  class {'iis':
-#   ensure => installed,
+#   ensure  => installed,
+#   restart => true,
 #  }
 #
 # === Authors
@@ -172,7 +173,7 @@ class iis (
   {
     installed:
     {
-      core::windows::feature { 'Web-Server,Web-WebServer,Web-Common-Http,Web-App-Dev,Web-CGI,Web-ISAPI-Ext,Web-ISAPI-Filter':
+      core::windows::feature { 'Web-Server,Web-WebServer,Web-Common-Http,Web-App-Dev,Web-CGI,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Mgmt-Tools,Web-Mgmt-Console':
         ensure  => present,
         restart => $restart,
       }

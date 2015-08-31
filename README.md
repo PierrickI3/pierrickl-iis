@@ -1,4 +1,6 @@
-# iis
+# IIS Puppet Module
+
+## Installs IIS with specific subfeatures. A more generic version will be published later on. This module is used for a specific internal project.
 
 [![Build Status](https://travis-ci.org/PierrickI3/pierrickl-iis.svg?branch=master)](https://travis-ci.org/PierrickI3/pierrickl-iis)
 
@@ -8,12 +10,7 @@
 
 1. [Overview](#overview)
 2. [Module Description - What the modules do and why it is useful](#module-description)
-3. [Setup - The basics of getting started with cicserver::install and cicserver::icsurvey](#setup)
-    * [What install affects](#what-install-affects)
-    * [What icsurvey affects](#what-icsurvey-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with install](#beginning-with-install)
-    * [Beginning with icsurvey](#beginning-with-icsurvey)
+3. [Setup - The basics of getting started with iis](#setup)
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
@@ -41,7 +38,8 @@ Windows 8.1, 2012 or 2012R2
 
 ```puppet
 class { 'iis':
-    ensure                  => installed,
+    ensure  => installed,
+    restart => true,
 }
 ```
 
