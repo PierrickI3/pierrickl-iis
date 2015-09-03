@@ -2,3 +2,4 @@
 2015-08-28: Fix subfeatures
 2015-08-28: Added warning about specific subfeatures being installed
 2015-08-31: Added Management console
+2015-09-03: Changed name from iis to installiis to avoid conflicts with other iis puppet modules

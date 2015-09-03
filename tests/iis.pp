@@ -1,4 +1,4 @@
-class {'iis':
+class {'installiis':
   ensure  => installed,
   restart => false,
 }

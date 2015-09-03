@@ -164,7 +164,7 @@ define core::windows::feature(
 #
 # Copyright 2015, Interactive Intelligence Inc.
 #
-class iis (
+class installiis (
   $ensure  = installed,
   $restart = false,
 )

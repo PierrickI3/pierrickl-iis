@@ -37,7 +37,7 @@ Windows 8.1, 2012 or 2012R2
 ## Usage
 
 ```puppet
-class { 'iis':
+class { 'installiis':
     ensure  => installed,
     restart => true,
 }
