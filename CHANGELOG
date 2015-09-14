@@ -3,3 +3,4 @@
 2015-08-28: Added warning about specific subfeatures being installed
 2015-08-31: Added Management console
 2015-09-03: Changed name from iis to installiis to avoid conflicts with other iis puppet modules
+2015-09-14: Added more features required for the Interaction Web Portal
