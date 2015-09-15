@@ -93,7 +93,6 @@ define core::windows::feature(
           {
             exec {"core-windows-feature-${feature_name}":
               command  => "Install-WindowsFeature -Name ${feature_name} ${subfeatures_option} ${tools_option}",
-              onlyif   => "if ((Get-WindowsFeature ${feature_name}) | where { \$_.InstallState -eq 'Installed'}) { exit 1 }",
               provider => powershell,
               timeout  => $timeout,
               notify   => Reboot['now'],
@@ -103,7 +102,6 @@ define core::windows::feature(
           {
             exec {"core-windows-feature-${feature_name}":
               command  => "Install-WindowsFeature -Name ${feature_name} ${subfeatures_option} ${tools_option}",
-              onlyif   => "if ((Get-WindowsFeature ${feature_name}) | where { \$_.InstallState -eq 'Installed'}) { exit 1 }",
               provider => powershell,
               timeout  => $timeout,
             }
@@ -115,7 +113,6 @@ define core::windows::feature(
           {
             exec {"core-windows-feature-${feature_name}":
               command  => "Uninstall-WindowsFeature -Name ${feature_name}",
-              onlyif   => "if ((Get-WindowsFeature ${feature_name}) | where { \$_.InstallState -ne 'Installed'}) { exit 1 }",
               provider => powershell,
               timeout  => $timeout,
               notify   => Reboot['now'],
@@ -125,7 +122,6 @@ define core::windows::feature(
           {
             exec {"core-windows-feature-${feature_name}":
               command  => "Uninstall-WindowsFeature -Name ${feature_name}",
-              onlyif   => "if ((Get-WindowsFeature ${feature_name}) | where { \$_.InstallState -ne 'Installed'}) { exit 1 }",
               provider => powershell,
               timeout  => $timeout,
             }
