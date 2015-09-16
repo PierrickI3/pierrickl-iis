@@ -3,7 +3,7 @@ define core::windows::feature(
   $restart          = true,
   $subfeatures      = false,
   $management_tools = false,
-  $timeout          = 300,
+  $timeout          = 600,
 )
 {
   validate_re($ensure, ['^(present|installed|absent|uninstalled)$'])
@@ -35,7 +35,6 @@ define core::windows::feature(
           {
             exec {"core-windows-feature-${feature_name}":
               command  => "Add-WindowsFeature -Name ${feature_name} ${subfeatures_option}",
-              onlyif   => "if ((Get-WindowsFeature ${feature_name}) | where { \$_.Installed -eq \$true}) { exit 1 }",
               provider => powershell,
               timeout  => $timeout,
               notify   => Reboot['now'],
@@ -46,7 +45,6 @@ define core::windows::feature(
           {
             exec {"core-windows-feature-${feature_name}":
               command  => "Add-WindowsFeature -Name ${feature_name} ${subfeatures_option}",
-              onlyif   => "if ((Get-WindowsFeature ${feature_name}) | where { \$_.Installed -eq \$true}) { exit 1 }",
               provider => powershell,
               timeout  => $timeout,
               require  => Exec['chocolatey-install'],
@@ -59,7 +57,6 @@ define core::windows::feature(
           {
             exec {"core-windows-feature-${feature_name}":
               command  => "Remove-WindowsFeature -Name ${feature_name}",
-              onlyif   => "if ((Get-WindowsFeature ${feature_name}) | where { \$_.Installed -eq \$false}) { exit 1 }",
               provider => powershell,
               timeout  => $timeout,
               notify   => Reboot['now'],
@@ -70,7 +67,6 @@ define core::windows::feature(
           {
             exec {"core-windows-feature-${feature_name}":
               command  => "Remove-WindowsFeature -Name ${feature_name}",
-              onlyif   => "if ((Get-WindowsFeature ${feature_name}) | where { \$_.Installed -eq \$false}) { exit 1 }",
               provider => powershell,
               timeout  => $timeout,
               require  => Exec['chocolatey-install'],
