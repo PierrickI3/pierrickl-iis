@@ -3,6 +3,7 @@ define core::windows::feature(
   $restart          = true,
   $subfeatures      = false,
   $management_tools = false,
+  $source           = 'f:',
   $timeout          = 600,
 )
 {
@@ -88,7 +89,7 @@ define core::windows::feature(
           if ($restart)
           {
             exec {"core-windows-feature-${feature_name}":
-              command  => "Install-WindowsFeature -Name ${feature_name} ${subfeatures_option} ${tools_option}",
+              command  => "Install-WindowsFeature -Name ${feature_name} ${subfeatures_option} ${tools_option} -Source ${source}\\sources\\SxS",
               provider => powershell,
               timeout  => $timeout,
               notify   => Reboot['now'],
@@ -97,7 +98,7 @@ define core::windows::feature(
           else
           {
             exec {"core-windows-feature-${feature_name}":
-              command  => "Install-WindowsFeature -Name ${feature_name} ${subfeatures_option} ${tools_option}",
+              command  => "Install-WindowsFeature -Name ${feature_name} ${subfeatures_option} ${tools_option} -Source ${source}\\sources\\SxS",
               provider => powershell,
               timeout  => $timeout,
             }
@@ -165,9 +166,34 @@ class installiis (
   {
     installed:
     {
+      # Mount Windows ISO
+      $mountdriveletter = 'f:'
+      $daascache        = 'C:/daas-cache'
+
+      debug('Mounting Windows ISO')
+      exec {'mount-windows-iso':
+        command => "cmd.exe /c imdisk -a -f \"${daascache}\\${::windows_latest_version}\" -m ${mountdriveletter}",
+        path    => $::path,
+        cwd     => $::system32,
+        creates => "${mountdriveletter}/Installs/ServerComponents/Dialer_${versiontouse}.msi",
+        timeout => 30,
+      }
+
+      # Install Features
       core::windows::feature { 'Web-Server,Web-WebServer,Web-Common-Http,Web-App-Dev,Web-Net-Ext,Web-Net-Ext45,Web-AppInit,Web-ASP,Web-Asp-Net,Web-Asp-Net45,Web-CGI,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Includes,Web-WebSockets,Web-Mgmt-Tools,Web-Mgmt-Console,NET-HTTP-Activation,NET-Non-HTTP-Activ,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,AS-WAS-Support,AS-HTTP-Activation,AS-MSMQ-Activation,AS-Named-Pipes,AS-TCP-Activation,NET-WCF-Services45,NET-WCF-HTTP-Activation45,NET-WCF-MSMQ-Activation45,NET-WCF-Pipe-Activation45,NET-WCF-TCP-Activation45,NET-WCF-TCP-PortSharing45':
-        ensure  => present,
-        restart => $restart,
+        ensure   => present,
+        source   => $mountdriveletter,
+        restart  => $restart,
+        requires => Exec['mount-windows-iso'],
+      }
+
+      # Unmount Windows ISO
+      exec {'unmount-windows-iso':
+        command => "imdisk -d -m ${mountdriveletter}",
+        path    => $::path,
+        cwd     => $::system32,
+        timeout => 30,
+        requires => Core::Windows::Feature['Web-Server,Web-WebServer,Web-Common-Http,Web-App-Dev,Web-Net-Ext,Web-Net-Ext45,Web-AppInit,Web-ASP,Web-Asp-Net,Web-Asp-Net45,Web-CGI,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Includes,Web-WebSockets,Web-Mgmt-Tools,Web-Mgmt-Console,NET-HTTP-Activation,NET-Non-HTTP-Activ,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,AS-WAS-Support,AS-HTTP-Activation,AS-MSMQ-Activation,AS-Named-Pipes,AS-TCP-Activation,NET-WCF-Services45,NET-WCF-HTTP-Activation45,NET-WCF-MSMQ-Activation45,NET-WCF-Pipe-Activation45,NET-WCF-TCP-Activation45,NET-WCF-TCP-PortSharing45'],
       }
     }
     default:
