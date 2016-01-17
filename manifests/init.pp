@@ -1,4 +1,4 @@
-define core::windows::feature(
+define windowsfeature(
   $ensure           = installed,
   $restart          = true,
   $subfeatures      = false,
@@ -169,10 +169,11 @@ class installiis (
       # Mount Windows ISO
       $mountdriveletter = 'f:'
       $daascache        = 'C:/daas-cache'
+      $windows_latest_version = '9600.16384.WINBLUE_RTM.130821-1623_X64FRE_SERVER_EVAL_EN-US-IRM_SSS_X64FREE_EN-US_DV5.ISO'
 
       debug('Mounting Windows ISO')
       exec {'mount-windows-iso':
-        command => "cmd.exe /c imdisk -a -f \"${daascache}\\${::windows_latest_version}\" -m ${mountdriveletter}",
+        command => "cmd.exe /c imdisk -a -f \"${daascache}\\${windows_latest_version}\" -m ${mountdriveletter}",
         path    => $::path,
         cwd     => $::system32,
         creates => "${mountdriveletter}/Installs/ServerComponents/Dialer_${versiontouse}.msi",
@@ -180,11 +181,12 @@ class installiis (
       }
 
       # Install Features
-      core::windows::feature { 'Web-Server,Web-WebServer,Web-Common-Http,Web-App-Dev,Web-Net-Ext,Web-Net-Ext45,Web-AppInit,Web-ASP,Web-Asp-Net,Web-Asp-Net45,Web-CGI,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Includes,Web-WebSockets,Web-Mgmt-Tools,Web-Mgmt-Console,NET-HTTP-Activation,NET-Non-HTTP-Activ,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,AS-WAS-Support,AS-HTTP-Activation,AS-MSMQ-Activation,AS-Named-Pipes,AS-TCP-Activation,NET-WCF-Services45,NET-WCF-HTTP-Activation45,NET-WCF-MSMQ-Activation45,NET-WCF-Pipe-Activation45,NET-WCF-TCP-Activation45,NET-WCF-TCP-PortSharing45':
-        ensure   => present,
-        source   => $mountdriveletter,
-        restart  => $restart,
-        requires => Exec['mount-windows-iso'],
+      windowsfeature {'IIS':
+        name    => 'Web-Server,Web-WebServer,Web-Common-Http,Web-App-Dev,Web-Net-Ext,Web-Net-Ext45,Web-AppInit,Web-ASP,Web-Asp-Net,Web-Asp-Net45,Web-CGI,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Includes,Web-WebSockets,Web-Mgmt-Tools,Web-Mgmt-Console,NET-HTTP-Activation,NET-Non-HTTP-Activ,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,AS-WAS-Support,AS-HTTP-Activation,AS-MSMQ-Activation,AS-Named-Pipes,AS-TCP-Activation,NET-WCF-Services45,NET-WCF-HTTP-Activation45,NET-WCF-MSMQ-Activation45,NET-WCF-Pipe-Activation45,NET-WCF-TCP-Activation45,NET-WCF-TCP-PortSharing45',
+        ensure  => present,
+        source  => $mountdriveletter,
+        restart => $restart,
+        require => Exec['mount-windows-iso'],
       }
 
       # Unmount Windows ISO
@@ -193,7 +195,7 @@ class installiis (
         path    => $::path,
         cwd     => $::system32,
         timeout => 30,
-        requires => Core::Windows::Feature['Web-Server,Web-WebServer,Web-Common-Http,Web-App-Dev,Web-Net-Ext,Web-Net-Ext45,Web-AppInit,Web-ASP,Web-Asp-Net,Web-Asp-Net45,Web-CGI,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Includes,Web-WebSockets,Web-Mgmt-Tools,Web-Mgmt-Console,NET-HTTP-Activation,NET-Non-HTTP-Activ,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,AS-WAS-Support,AS-HTTP-Activation,AS-MSMQ-Activation,AS-Named-Pipes,AS-TCP-Activation,NET-WCF-Services45,NET-WCF-HTTP-Activation45,NET-WCF-MSMQ-Activation45,NET-WCF-Pipe-Activation45,NET-WCF-TCP-Activation45,NET-WCF-TCP-PortSharing45'],
+        require => Windowsfeature['IIS'],
       }
     }
     default:

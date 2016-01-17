@@ -1,6 +1,6 @@
 {
   "name": "PierrickL-installiis",
-  "version": "0.0.8",
+  "version": "0.0.14",
   "author": "Pierrick Lozach",
   "summary": "Enables IIS on Windows 8.1, 2012 or 2012R2",
   "license": "Apache-2.0",

@@ -6,3 +6,5 @@
 2015-09-14: Added more features required for the Interaction Web Portal
 2015-09-16: Increasing timeout
 2015-09-16: Removing onlyif conditions that prevent features from being installed if at least one is already installed
+2016-01-16: Need to mount Windows ISO for specific features
+2016-01-17: Custom fact not working. Need to hardcode windows ISO filename

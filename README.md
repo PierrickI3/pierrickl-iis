@@ -40,6 +40,7 @@ Windows 8.1, 2012 or 2012R2
 class { 'installiis':
     ensure  => installed,
     restart => true,
+    source  => 'f:',
 }
 ```
 
